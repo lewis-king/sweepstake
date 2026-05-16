@@ -746,14 +746,16 @@ function AssignmentsModal({ session, onClose }: { session: Session; onClose: () 
           )}
           
           {/* Close Button */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onClose}
-            className="mt-6 w-full py-3 rounded-2xl bg-zinc-700 font-bold text-white text-base hover:bg-zinc-600 transition-all"
+          <div className="mt-6 px-2">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onClose}
+              className="w-full py-3 rounded-2xl bg-zinc-700 font-bold text-white text-base hover:bg-zinc-600 transition-all"
           >
             Close
           </motion.button>
+          </div>
         </PremiumCard>
       </motion.div>
     </div>
@@ -844,17 +846,19 @@ function ResultsDashboard({ session }: { session: Session }) {
         </div>
 
         {/* Copy Button */}
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: results.length * 0.1 }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={copyToClipboard}
-          className="mt-6 w-full py-3 rounded-2xl bg-gradient-to-r from-green-500 to-green-700 font-bold text-white text-base shadow-lg hover:shadow-green-500/30 transition-all"
+        <div className="mt-6 px-2">
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: results.length * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={copyToClipboard}
+            className="w-full py-3 rounded-2xl bg-gradient-to-r from-green-500 to-green-700 font-bold text-white text-base shadow-lg hover:shadow-green-500/30 transition-all"
         >
           📋 Copy Results
         </motion.button>
+        </div>
       </motion.div>
     </div>
   );
@@ -884,7 +888,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
         transition={{ duration: 0.8 }}
         className="w-full max-w-lg md:max-w-xl lg:max-w-2xl relative z-10"
       >
-        <PremiumCard glow className="p-6 md:p-8 lg:p-10">
+        <PremiumCard glow className="p-6 md:p-8 lg:p-10 space-y-4">
           {/* Title Section */}
           <div className="text-center mb-6 md:mb-8">
             <AnimatedTrophy />
@@ -961,12 +965,13 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           </div>
 
           {/* Create Room Button */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => onCreateRoom(targetPlayers, playerName)}
-            disabled={!playerName.trim() || isCreating}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-lg md:text-xl mb-4 shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          <div className="px-2">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onCreateRoom(targetPlayers, playerName)}
+              disabled={!playerName.trim() || isCreating}
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-lg md:text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isCreating ? (
               <motion.span
@@ -980,6 +985,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               'CREATE NEW ROOM'
             )}
           </motion.button>
+          </div>
 
           {/* Divider */}
           <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-6">
@@ -1001,15 +1007,17 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               />
             </div>
             
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => onJoinRoom(roomCode, playerName)}
-              disabled={!roomCode.trim() || !playerName.trim() || isJoining}
-              className="w-full py-3 rounded-2xl bg-zinc-700 font-bold text-white text-base hover:bg-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            <div className="px-2">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => onJoinRoom(roomCode, playerName)}
+                disabled={!roomCode.trim() || !playerName.trim() || isJoining}
+                className="w-full py-3 rounded-2xl bg-zinc-700 font-bold text-white text-base hover:bg-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isJoining ? 'Joining...' : 'JOIN ROOM'}
             </motion.button>
+            </div>
           </div>
         </PremiumCard>
       </motion.div>
@@ -1092,17 +1100,19 @@ function LobbyScreen({
 
         {/* Start Button or Waiting Message */}
         {isHost ? (
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onStartDraw}
-            disabled={!canStart || isUpdating}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          <div className="px-2">
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onStartDraw}
+              disabled={!canStart || isUpdating}
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isUpdating ? 'Processing...' : '🎲 START DRAW'}
           </motion.button>
+          </div>
         ) : (
           <motion.p
             initial={{ opacity: 0 }}
@@ -1115,16 +1125,18 @@ function LobbyScreen({
         
         {/* Show Assignments Button */}
         {session.status === 'DRAWING' && onShowAssignments && (
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onShowAssignments}
-            className="mt-4 w-full py-3 rounded-2xl bg-zinc-800 font-bold text-white text-base hover:bg-zinc-700 transition-all"
+          <div className="mt-4 px-2">
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onShowAssignments}
+              className="w-full py-3 rounded-2xl bg-zinc-800 font-bold text-white text-base hover:bg-zinc-700 transition-all"
           >
             👁️ Show Current Assignments
           </motion.button>
+          </div>
         )}
       </div>
     </div>
