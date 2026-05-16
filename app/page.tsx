@@ -649,8 +649,8 @@ function AssignmentsModal({ session, onClose }: { session: Session; onClose: () 
           
           {/* Progress */}
           <div className="mb-4 md:mb-5">
-            <div className="flex items-center justify-between text-sm text-zinc-400 mb-2">
-              <span>Progress</span>
+            <div className="flex items-center justify-between text-sm text-zinc-400 mb-2 px-1">
+              <span className="px-1">Progress</span>
               <span>{assignedPlayers.length} / {session.players.length}</span>
             </div>
             <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
@@ -882,13 +882,13 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
 
           {/* Player Count Slider */}
           <div className="mb-5 md:mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <label className="text-zinc-400 font-semibold tracking-wide">TARGET PLAYERS</label>
+            <div className="flex items-center justify-between mb-4 px-1">
+              <label className="text-zinc-400 font-semibold tracking-wide px-1">TARGET PLAYERS</label>
               <motion.span
                 key={targetPlayers}
                 initial={{ scale: 1.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="text-2xl font-black text-yellow-400"
+                className="text-2xl font-black text-yellow-400 px-1"
               >
                 {targetPlayers}
               </motion.span>
@@ -904,7 +904,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
                 background: `linear-gradient(to right, #fbbf24 0%, #fbbf24 ${((targetPlayers - 2) / 46) * 100}%, #262626 ${((targetPlayers - 2) / 46) * 100}%, #262626 100%)`
               }}
             />
-            <div className="flex justify-between mt-2 text-xs text-zinc-600">
+            <div className="flex justify-between mt-3 px-1 text-xs text-zinc-600 font-medium">
               <span>2</span>
               <span>25</span>
               <span>48</span>
