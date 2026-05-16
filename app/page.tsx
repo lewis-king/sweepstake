@@ -1017,7 +1017,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => onJoinRoom(roomCode, playerName)}
+                onClick={() => {  onJoinRoom(roomCode, playerName); }}
                 disabled={!roomCode.trim() || !playerName.trim() || isJoining}
                 className="w-full py-3 rounded-2xl bg-zinc-700 font-bold text-white text-base hover:bg-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -1214,13 +1214,22 @@ export default function SweepstakeApp() {
   };
 
   const handleJoinRoom = async (code: string, name: string) => {
-    if (!code.trim()) return;
+    
+    if (!code.trim()) {
+      
+      return;
+    }
     
     const playerName = name.trim() || generateRandomPlayerName();
+    
     const result = await joinRoomByCode(code.toUpperCase(), playerName, deviceId.current);
+    
     if (result?.sessionId) {
+      
       setRoomId(result.sessionId);
       setView('lobby');
+    } else {
+      
     }
   };
 
@@ -1297,12 +1306,12 @@ export default function SweepstakeApp() {
   }, [view, room.session?.status]);
   // Debug: log view changes
   useEffect(() => {
-    console.log('[DEBUG] View changed to:', view, '| roomId:', roomId);
+    
   }, [view, roomId]);
 
   // Debug: log room data changes
   useEffect(() => {
-    console.log('[DEBUG] Room session:', room.session?.id || 'null');
+    
   }, [room.session]);
 
 
