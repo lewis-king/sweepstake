@@ -19,6 +19,7 @@ import {
   generateFinalResults,
   WORLD_CUP_2026_TEAMS,
   getTeamAdjective,
+  isTop5Team,
 } from '@/lib/seeded-random';
 
 // ==================== HOOKS ====================
@@ -463,7 +464,7 @@ function SlotMachine({ players, onComplete }: { players: string[]; onComplete: (
 // Pack Opening Reveal Animation
 function PackReveal({ playerName, team, onComplete }: { playerName: string; team: typeof WORLD_CUP_2026_TEAMS[0]; onComplete: () => void }) {
   const [phase, setPhase] = useState<'intro' | 'buildup' | 'reveal' | 'celebrate' | 'exit'>('intro');
-  const isTop5 = parseFloat(team.odds) <= 5;
+  const isTop5 = isTop5Team(team.name);
   const { explode } = useParticleExplosion(isTop5 ? 200 : 100);
   const revealKey = `${playerName}-${team.code}`;
 
