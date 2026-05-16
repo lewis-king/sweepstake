@@ -974,13 +974,19 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-lg md:text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isCreating ? (
-              <motion.span
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                className="inline-block"
-              >
-                Creating...
-              </motion.span>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1">
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1.5 h-4 bg-zinc-900 rounded-full"
+                      animate={{ height: [4, 16, 4] }}
+                      transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                    />
+                  ))}
+                </div>
+                <span className="font-bold tracking-wider">CREATING</span>
+              </div>
             ) : (
               'CREATE NEW ROOM'
             )}
@@ -1015,7 +1021,23 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
                 disabled={!roomCode.trim() || !playerName.trim() || isJoining}
                 className="w-full py-3 rounded-2xl bg-zinc-700 font-bold text-white text-base hover:bg-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isJoining ? 'Joining...' : 'JOIN ROOM'}
+              {isJoining ? (
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1">
+                    {[0, 1, 2].map((i) => (
+                      <motion.div
+                        key={i}
+                        className="w-1.5 h-4 bg-white rounded-full"
+                        animate={{ height: [4, 16, 4] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                      />
+                    ))}
+                  </div>
+                  <span className="font-bold tracking-wider">JOINING</span>
+                </div>
+              ) : (
+                'JOIN ROOM'
+              )}
             </motion.button>
             </div>
           </div>
@@ -1110,7 +1132,23 @@ function LobbyScreen({
               disabled={!canStart || isUpdating}
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {isUpdating ? 'Processing...' : '🎲 START DRAW'}
+            {isUpdating ? (
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1">
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1.5 h-4 bg-zinc-900 rounded-full"
+                      animate={{ height: [4, 16, 4] }}
+                      transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                    />
+                  ))}
+                </div>
+                <span className="font-bold tracking-wider">PROCESSING</span>
+              </div>
+            ) : (
+              '🎲 START DRAW'
+            )}
           </motion.button>
           </div>
         ) : (
@@ -1311,7 +1349,21 @@ export default function SweepstakeApp() {
     }
   }
 
-  if (view === 'lobby' && room.session) {
+  if (view === 'lobby') {
+    if (!room.session) {
+      // Loading room data after creation/join
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 relative">
+              <div className="absolute inset-0 rounded-full border-4 border-zinc-700" />
+              <div className="absolute inset-0 rounded-full border-4 border-yellow-500 border-t-transparent animate-spin" />
+            </div>
+            <p className="text-yellow-400 font-bold tracking-widest animate-pulse">ENTERING LOBBY</p>
+          </div>
+        </div>
+      );
+    }
     const isHost = room.session.hostId === deviceId.current;
     return (
       <LobbyScreen 
