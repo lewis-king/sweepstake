@@ -475,13 +475,13 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
     const sequence = isTop5 ? [
       { phase: 'buildup' as const, delay: 4000 },
       { phase: 'reveal' as const, delay: 14000 },
-      { phase: 'celebrate' as const, delay: 23000 },
-      { phase: 'exit' as const, delay: 26000 },
+      { phase: 'celebrate' as const, delay: 30000 },
+      { phase: 'exit' as const, delay: 35000 },
     ] : [
       { phase: 'buildup' as const, delay: 5000 },
       { phase: 'reveal' as const, delay: 15000 },
-      { phase: 'celebrate' as const, delay: 25000 },
-      { phase: 'exit' as const, delay: 28000 },
+      { phase: 'celebrate' as const, delay: 30000 },
+      { phase: 'exit' as const, delay: 35000 },
     ];
 
     const timeouts: NodeJS.Timeout[] = [];
@@ -577,7 +577,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
                     initial={{ scale: 0, opacity: 0, rotate: -180 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
                     transition={{ delay: 0.4, type: 'spring', damping: 10 }}
-                    className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-red-600 via-orange-600 to-red-600 rounded-full shadow-[0_0_40px_rgba(239,68,68,0.8)] border-2 border-yellow-400 z-20"
+                    className="absolute -top-12 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-red-600 via-orange-600 to-red-600 rounded-full shadow-[0_0_40px_rgba(239,68,68,0.8)] border-2 border-yellow-400 z-20"
                   >
                     <span className="text-white font-black text-sm md:text-base tracking-widest uppercase flex items-center gap-2">
                       <span>🔥</span> TOP PICK <span>🔥</span>
