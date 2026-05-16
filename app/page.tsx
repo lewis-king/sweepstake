@@ -463,18 +463,24 @@ function SlotMachine({ players, onComplete }: { players: string[]; onComplete: (
 // Pack Opening Reveal Animation
 function PackReveal({ playerName, team, onComplete }: { playerName: string; team: typeof WORLD_CUP_2026_TEAMS[0]; onComplete: () => void }) {
   const [phase, setPhase] = useState<'intro' | 'buildup' | 'reveal' | 'celebrate' | 'exit'>('intro');
-  const { explode } = useParticleExplosion(100);
+  const isTop5 = team.odds <= 5;
+  const { explode } = useParticleExplosion(isTop5 ? 200 : 100);
   const revealKey = `${playerName}-${team.code}`;
 
   // Reset and start animation when new player/team arrives
   useEffect(() => {
     setPhase('intro');
     
-    const sequence = [
-      { phase: 'buildup' as const, delay: 5000 },
-      { phase: 'reveal' as const, delay: 15000 },
-      { phase: 'celebrate' as const, delay: 25000 },
-      { phase: 'exit' as const, delay: 29000 },
+    const sequence = isTop5 ? [
+      { phase: 'buildup' as const, delay: 1500 },
+      { phase: 'reveal' as const, delay: 3500 },
+      { phase: 'celebrate' as const, delay: 6500 },
+      { phase: 'exit' as const, delay: 8000 },
+    ] : [
+      { phase: 'buildup' as const, delay: 2000 },
+      { phase: 'reveal' as const, delay: 4500 },
+      { phase: 'celebrate' as const, delay: 7500 },
+      { phase: 'exit' as const, delay: 9000 },
     ];
 
     const timeouts: NodeJS.Timeout[] = [];
@@ -564,12 +570,30 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
                   {team.flag}
                 </motion.div>
                 
+                {/* Top 5 Badge */}
+                {isTop5 && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0, rotate: -180 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                    transition={{ delay: 0.4, type: 'spring', damping: 10 }}
+                    className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-red-600 via-orange-600 to-red-600 rounded-full shadow-[0_0_40px_rgba(239,68,68,0.8)] border-2 border-yellow-400 z-20"
+                  >
+                    <span className="text-white font-black text-sm md:text-base tracking-widest uppercase flex items-center gap-2">
+                      <span>🔥</span> TOP PICK <span>🔥</span>
+                    </span>
+                  </motion.div>
+                )}
+                
                 {/* Team Name */}
                 <motion.h1
                   initial={{ y: 50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="text-5xl md:text-8xl font-black italic bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-600 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(251,191,36,0.5)]"
+                  className={`text-5xl md:text-8xl font-black italic bg-gradient-to-br ${
+                    isTop5 
+                      ? 'from-red-200 via-orange-400 to-red-600 drop-shadow-[0_0_60px_rgba(239,68,68,0.6)]'
+                      : 'from-yellow-200 via-yellow-400 to-yellow-600 drop-shadow-[0_0_40px_rgba(251,191,36,0.5)]'
+                  } bg-clip-text text-transparent`}
                 >
                   {team.name}
                 </motion.h1>
@@ -597,7 +621,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
               className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
-              transition={{ duration: 6, ease: 'linear' }}
+              transition={{ duration: 3, ease: 'linear' }}
             />
           </motion.div>
         )}
@@ -607,15 +631,27 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="mt-8"
+            className="mt-8 space-y-2"
           >
-            <p className="text-lg md:text-xl font-bold text-zinc-400 tracking-widest mb-2">
+            {isTop5 && (
+              <motion.p
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', damping: 10 }}
+                className="text-3xl md:text-5xl font-black italic bg-gradient-to-r from-red-400 via-orange-400 to-red-400 bg-clip-text text-transparent tracking-widest drop-shadow-[0_0_30px_rgba(239,68,68,0.5)]"
+              >
+                🔥🔥🔥 TOP PICK! 🔥🔥🔥
+              </motion.p>
+            )}
+            <p className="text-lg md:text-xl font-bold text-zinc-400 tracking-widest">
               YOU'RE THE
             </p>
             <p className="text-2xl md:text-4xl font-black italic text-yellow-400 tracking-widest">
               🎉 {getTeamAdjective(team.odds)}! 🎉
             </p>
-            <p className="text-zinc-500 text-sm mt-3">Odds: {team.odds}</p>
+            <p className={`text-sm mt-3 font-bold tracking-wider ${isTop5 ? 'text-orange-400' : 'text-zinc-500'}`}>
+              Odds: {team.odds}{isTop5 ? ' ⭐' : ''}
+            </p>
           </motion.div>
         )}
       </div>
