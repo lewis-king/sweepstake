@@ -963,7 +963,6 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               className="w-full px-4 py-3 rounded-2xl bg-zinc-800/50 border border-zinc-700 text-white placeholder-zinc-500 text-center text-base font-bold focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all"
             />
           </div>
-          </div>
 
           {/* Create Room Button */}
           <div className="px-2">
