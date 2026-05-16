@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SessionStatus {
+  WAITING
+  DRAWING
+  COMPLETED
+}
+
+model Session {
+  id            String        @id @default(cuid())
+  roomCode      String        @unique @db.VarChar(6)
+  hostId        String
+  targetPlayers Int
+  seed          Float
+  status        SessionStatus @default(WAITING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  players       Player[]
+
+  @@index([roomCode])
+  @@index([status])
+}
+
+model Player {
+  id           String   @id @default(cuid())
+  sessionId    String
+  name         String
+  assignedTeam String?
+  joinedAt     DateTime @default(now())
+  session      Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+}
