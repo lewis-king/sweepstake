@@ -888,7 +888,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
         transition={{ duration: 0.8 }}
         className="w-full max-w-lg md:max-w-xl lg:max-w-2xl relative z-10"
       >
-        <PremiumCard glow className="p-6 md:p-8 lg:p-10 space-y-4">
+        <PremiumCard glow className="pt-8 pb-6 px-6 md:pt-10 md:pb-8 md:px-8 lg:pt-12 lg:pb-10 lg:px-10 space-y-4">
           {/* Title Section */}
           <div className="text-center mb-6 md:mb-8">
             <AnimatedTrophy />
@@ -953,7 +953,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           </div>
 
           {/* Name Input for Creator */}
-          <div className="mb-4 md:mb-5">
+          <div className="mb-4 md:mb-5 px-2">
             <input
               type="text"
               placeholder="NAME"
@@ -962,6 +962,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               maxLength={24}
               className="w-full px-4 py-3 rounded-2xl bg-zinc-800/50 border border-zinc-700 text-white placeholder-zinc-500 text-center text-base font-bold focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all"
             />
+          </div>
           </div>
 
           {/* Create Room Button */}
@@ -988,7 +989,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           </div>
 
           {/* Divider */}
-          <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-6">
+          <div className="flex items-center gap-3 md:gap-4 mt-4 mb-5 md:mb-6">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
             <span className="text-zinc-500 font-semibold text-sm">OR JOIN EXISTING</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
@@ -1006,8 +1007,9 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
                 className="w-full px-4 py-3 rounded-2xl bg-zinc-800/50 border border-zinc-700 text-white placeholder-zinc-500 text-center text-xl font-bold tracking-widest focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all"
               />
             </div>
+            </div>
             
-            <div className="px-2">
+            <div className="px-2 mb-4 md:mb-6">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
