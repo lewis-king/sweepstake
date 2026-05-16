@@ -139,7 +139,30 @@ export function useJoinRoomByCode() {
 export function useRoom(roomId?: string) {
   const { data, error, mutate } = useSWR<Session>(
     roomId ? `/api/room/${roomId}` : null,
-    fetcher,
+    async (url: string) => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(await res.text());
+      const rawData = await res.json();
+      
+      // Transform snake_case to camelCase
+      const session: Session = {
+        id: rawData.id,
+        roomCode: rawData.room_code,
+        hostId: rawData.host_id,
+        targetPlayers: rawData.target_players,
+        seed: rawData.seed,
+        status: rawData.status,
+        players: (rawData.players || []).map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          assignedTeam: p.assigned_team,
+          joinedAt: p.joined_at,
+        })),
+        createdAt: rawData.created_at,
+      };
+      
+      return session;
+    },
     { refreshInterval: 2000, dedupingInterval: 500 }
   );
 
@@ -161,11 +184,27 @@ export function useRoomByCode(roomCode: string) {
     setIsResolving(true);
     try {
       const res = await fetch(`/api/room/code/${roomCode}`);
-      const data = await res.json();
-      if (data.id) {
-        setRoomId(data.id);
-        setResolvedSession(data);
-        return data;
+      const rawData = await res.json();
+      if (rawData.id) {
+        setRoomId(rawData.id);
+        // Transform snake_case to camelCase
+        const session: Session = {
+          id: rawData.id,
+          roomCode: rawData.room_code,
+          hostId: rawData.host_id,
+          targetPlayers: rawData.target_players,
+          seed: rawData.seed,
+          status: rawData.status,
+          players: (rawData.players || []).map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            assignedTeam: p.assigned_team,
+            joinedAt: p.joined_at,
+          })),
+          createdAt: rawData.created_at,
+        };
+        setResolvedSession(session);
+        return session;
       }
     } catch (err) {
       console.error('Failed to resolve room code:', err);
