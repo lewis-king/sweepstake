@@ -178,6 +178,13 @@ export function parseOdds(odds: string): number {
   return parseFloat(parts[0]) / parseFloat(parts[1]);
 }
 
+// Check if team is top 5 favorite by odds
+export function isTop5Team(teamName: string): boolean {
+  const sorted = [...WORLD_CUP_2026_TEAMS].sort((a, b) => parseOdds(a.odds) - parseOdds(b.odds));
+  const top5 = sorted.slice(0, 5).map(t => t.name);
+  return top5.includes(teamName);
+}
+
 // Generate final results grouped by player, sorted by odds (best first)
 export function generateFinalResults(
   sessionSeed: number,
