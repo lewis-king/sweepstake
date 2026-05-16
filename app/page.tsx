@@ -1202,13 +1202,13 @@ export default function SweepstakeApp() {
 
   const handleCreateRoom = async (targetPlayers: number, name: string) => {
     if (!name.trim()) return;
-    console.log('[handleCreateRoom] Creating room...');
+    
     const result = await createRoom(deviceId.current, targetPlayers, name.trim());
-    console.log('[handleCreateRoom] Result:', result);
+    
     if (result?.sessionId) {
-      console.log('[handleCreateRoom] Setting roomId to:', result.sessionId);
+      
       setRoomId(result.sessionId);
-      console.log('[handleCreateRoom] Setting view to: lobby');
+      
       setView('lobby');
     }
   };
@@ -1295,6 +1295,16 @@ export default function SweepstakeApp() {
       nonHostInitialized.current = false;
     }
   }, [view, room.session?.status]);
+  // Debug: log view changes
+  useEffect(() => {
+    console.log('[DEBUG] View changed to:', view, '| roomId:', roomId);
+  }, [view, roomId]);
+
+  // Debug: log room data changes
+  useEffect(() => {
+    console.log('[DEBUG] Room session:', room.session?.id || 'null');
+  }, [room.session]);
+
 
   if (view === 'welcome') {
     return (
