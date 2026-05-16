@@ -472,15 +472,15 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
     setPhase('intro');
     
     const sequence = isTop5 ? [
-      { phase: 'buildup' as const, delay: 1500 },
-      { phase: 'reveal' as const, delay: 3500 },
-      { phase: 'celebrate' as const, delay: 6500 },
-      { phase: 'exit' as const, delay: 8000 },
+      { phase: 'buildup' as const, delay: 4000 },
+      { phase: 'reveal' as const, delay: 14000 },
+      { phase: 'celebrate' as const, delay: 23000 },
+      { phase: 'exit' as const, delay: 26000 },
     ] : [
-      { phase: 'buildup' as const, delay: 2000 },
-      { phase: 'reveal' as const, delay: 4500 },
-      { phase: 'celebrate' as const, delay: 7500 },
-      { phase: 'exit' as const, delay: 9000 },
+      { phase: 'buildup' as const, delay: 5000 },
+      { phase: 'reveal' as const, delay: 15000 },
+      { phase: 'celebrate' as const, delay: 25000 },
+      { phase: 'exit' as const, delay: 28000 },
     ];
 
     const timeouts: NodeJS.Timeout[] = [];
@@ -621,7 +621,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
               className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
-              transition={{ duration: 3, ease: 'linear' }}
+              transition={{ duration: 6, ease: 'linear' }}
             />
           </motion.div>
         )}
