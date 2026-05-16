@@ -374,7 +374,7 @@ function SlotMachine({ players, onComplete }: { players: string[]; onComplete: (
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-b from-zinc-950 to-zinc-900 z-50 flex flex-col items-center justify-center p-4">
+    <div className="fixed inset-0 bg-gradient-to-b from-zinc-950 to-zinc-900 z-50 flex flex-col items-center justify-center p-4 md:p-8">
       <AmbientOrbs />
       
       <motion.div
@@ -398,7 +398,7 @@ function SlotMachine({ players, onComplete }: { players: string[]; onComplete: (
         </motion.div>
       </motion.div>
 
-      <div className="flex gap-3 md:gap-4 items-center relative z-10">
+      <div className="flex gap-2 md:gap-3 lg:gap-4 items-center justify-center relative z-10">
         {reels.map((name, i) => (
           <motion.div
             key={i}
@@ -629,7 +629,7 @@ function AssignmentsModal({ session, onClose }: { session: Session; onClose: () 
   const unassignedPlayers = session.players.filter(p => !p.assignedTeam);
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-8">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -648,7 +648,7 @@ function AssignmentsModal({ session, onClose }: { session: Session; onClose: () 
           </div>
           
           {/* Progress */}
-          <div className="mb-4">
+          <div className="mb-4 md:mb-5">
             <div className="flex items-center justify-between text-sm text-zinc-400 mb-2">
               <span>Progress</span>
               <span>{assignedPlayers.length} / {session.players.length}</span>
@@ -665,7 +665,7 @@ function AssignmentsModal({ session, onClose }: { session: Session; onClose: () 
           
           {/* Assigned Players */}
           {assignedPlayers.length > 0 && (
-            <div className="mb-6">
+            <div className="mb-5 md:mb-6">
               <h3 className="text-sm font-bold text-yellow-400 mb-3 tracking-wider">ASSIGNED</h3>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {assignedPlayers.map((player, index) => (
@@ -736,13 +736,13 @@ function ResultsDashboard({ session }: { session: Session }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 px-4 py-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 px-4 md:px-6 py-6 md:py-8 relative overflow-hidden">
       <AmbientOrbs />
       
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-w-4xl mx-auto relative z-10"
+        className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto relative z-10"
       >
         {/* Header */}
         <div className="text-center mb-6">
@@ -776,7 +776,7 @@ function ResultsDashboard({ session }: { session: Session }) {
               >
                 <PremiumCard glow className="overflow-hidden">
                   {/* Player Header */}
-                  <div className="bg-gradient-to-r from-yellow-500/10 to-transparent px-4 py-3 border-b border-white/5">
+                  <div className="bg-gradient-to-r from-yellow-500/10 to-transparent px-4 md:px-5 py-3 border-b border-white/5">
                     <div className="flex items-center gap-3">
                       <span className="text-xl font-black italic text-yellow-500">{playerIndex + 1}.</span>
                       <span className="font-bold text-white text-base">{playerResult.playerName}</span>
@@ -792,7 +792,7 @@ function ResultsDashboard({ session }: { session: Session }) {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: teamIndex * 0.05 }}
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors"
+                        className="flex items-center gap-3 px-4 md:px-5 py-2 md:py-2.5 hover:bg-white/5 transition-colors"
                       >
                         <span className="text-lg">{team.flag}</span>
                         <span className="flex-1 font-semibold text-white text-sm">{team.name}</span>
@@ -838,18 +838,18 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
   const titleText = useTypewriter("WORLD CUP 2026", 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center p-4 md:p-8 lg:p-12 relative overflow-hidden">
       <AmbientOrbs />
       
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full max-w-2xl relative z-10"
+        className="w-full max-w-lg md:max-w-xl lg:max-w-2xl relative z-10"
       >
-        <PremiumCard glow className="p-6 md:p-10">
+        <PremiumCard glow className="p-6 md:p-8 lg:p-10">
           {/* Title Section */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6 md:mb-8">
             <AnimatedTrophy />
             <motion.h1 
               className="text-4xl md:text-6xl font-black italic mt-4 bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-700 bg-clip-text text-transparent"
@@ -881,7 +881,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           )}
 
           {/* Player Count Slider */}
-          <div className="mb-6">
+          <div className="mb-5 md:mb-6">
             <div className="flex items-center justify-between mb-4">
               <label className="text-zinc-400 font-semibold tracking-wide">TARGET PLAYERS</label>
               <motion.span
@@ -912,7 +912,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           </div>
 
           {/* Name Input for Creator */}
-          <div className="mb-4">
+          <div className="mb-4 md:mb-5">
             <input
               type="text"
               placeholder="NAME"
@@ -945,7 +945,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           </motion.button>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-6">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
             <span className="text-zinc-500 font-semibold text-sm">OR JOIN EXISTING</span>
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
@@ -998,7 +998,7 @@ function LobbyScreen({
   const canStart = playerCount >= 2 && session.status === 'WAITING';
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 px-4 py-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-950 to-zinc-900 px-4 md:px-6 py-6 md:py-8 relative overflow-hidden">
       <AmbientOrbs />
       
       <div className="max-w-2xl mx-auto relative z-10">
