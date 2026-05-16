@@ -1202,12 +1202,14 @@ export default function SweepstakeApp() {
 
   const handleCreateRoom = async (targetPlayers: number, name: string) => {
     if (!name.trim()) return;
+    console.log('[handleCreateRoom] Creating room...');
     const result = await createRoom(deviceId.current, targetPlayers, name.trim());
+    console.log('[handleCreateRoom] Result:', result);
     if (result?.sessionId) {
-      // Use useEffect to ensure roomId is set before switching view
+      console.log('[handleCreateRoom] Setting roomId to:', result.sessionId);
       setRoomId(result.sessionId);
-      // Small delay to ensure state update propagates
-      setTimeout(() => setView('lobby'), 100);
+      console.log('[handleCreateRoom] Setting view to: lobby');
+      setView('lobby');
     }
   };
 
@@ -1217,9 +1219,8 @@ export default function SweepstakeApp() {
     const playerName = name.trim() || generateRandomPlayerName();
     const result = await joinRoomByCode(code.toUpperCase(), playerName, deviceId.current);
     if (result?.sessionId) {
-      // Use setTimeout to ensure roomId state is updated before view change
       setRoomId(result.sessionId);
-      setTimeout(() => setView('lobby'), 100);
+      setView('lobby');
     }
   };
 
