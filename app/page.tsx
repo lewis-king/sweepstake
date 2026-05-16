@@ -1018,6 +1018,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               {isJoining ? 'Joining...' : 'JOIN ROOM'}
             </motion.button>
             </div>
+          </div>
         </PremiumCard>
       </motion.div>
     </div>
