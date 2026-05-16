@@ -974,7 +974,8 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-lg md:text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isCreating ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
+                <span className="font-bold tracking-wider">CREATING</span>
                 <div className="flex gap-1">
                   {[0, 1, 2].map((i) => (
                     <motion.div
@@ -985,7 +986,6 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
                     />
                   ))}
                 </div>
-                <span className="font-bold tracking-wider">CREATING</span>
               </div>
             ) : (
               'CREATE NEW ROOM'
@@ -1022,7 +1022,8 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
                 className="w-full py-3 rounded-2xl bg-zinc-700 font-bold text-white text-base hover:bg-zinc-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isJoining ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="font-bold tracking-wider">JOINING</span>
                   <div className="flex gap-1">
                     {[0, 1, 2].map((i) => (
                       <motion.div
@@ -1033,7 +1034,6 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
                       />
                     ))}
                   </div>
-                  <span className="font-bold tracking-wider">JOINING</span>
                 </div>
               ) : (
                 'JOIN ROOM'
@@ -1133,7 +1133,8 @@ function LobbyScreen({
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isUpdating ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
+                <span className="font-bold tracking-wider">PROCESSING</span>
                 <div className="flex gap-1">
                   {[0, 1, 2].map((i) => (
                     <motion.div
@@ -1144,7 +1145,6 @@ function LobbyScreen({
                     />
                   ))}
                 </div>
-                <span className="font-bold tracking-wider">PROCESSING</span>
               </div>
             ) : (
               '🎲 START DRAW'
@@ -1204,8 +1204,10 @@ export default function SweepstakeApp() {
     if (!name.trim()) return;
     const result = await createRoom(deviceId.current, targetPlayers, name.trim());
     if (result?.sessionId) {
+      // Use useEffect to ensure roomId is set before switching view
       setRoomId(result.sessionId);
-      setView('lobby');
+      // Small delay to ensure state update propagates
+      setTimeout(() => setView('lobby'), 100);
     }
   };
 
@@ -1215,8 +1217,9 @@ export default function SweepstakeApp() {
     const playerName = name.trim() || generateRandomPlayerName();
     const result = await joinRoomByCode(code.toUpperCase(), playerName, deviceId.current);
     if (result?.sessionId) {
+      // Use setTimeout to ensure roomId state is updated before view change
       setRoomId(result.sessionId);
-      setView('lobby');
+      setTimeout(() => setView('lobby'), 100);
     }
   };
 
