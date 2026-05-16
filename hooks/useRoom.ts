@@ -57,7 +57,7 @@ export function useCreateRoom() {
       }
 
       const data = await response.json();
-      return { sessionId: data.sessionId };
+      return { sessionId: data.session_id };
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to create room';
       setError(message);
@@ -123,7 +123,7 @@ export function useJoinRoomByCode() {
       }
 
       const data = await response.json();
-      return { sessionId: data.sessionId };
+      return { sessionId: data.session_id };
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to join room';
       setError(message);
