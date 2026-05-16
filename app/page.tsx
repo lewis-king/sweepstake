@@ -996,7 +996,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
 
           {/* Join Room Section */}
           <div className="space-y-3">
-            <div>
+            <div className="px-2 mb-3 md:mb-4">
               <input
                 type="text"
                 placeholder="ROOM CODE"
@@ -1005,7 +1005,6 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
                 maxLength={6}
                 className="w-full px-4 py-3 rounded-2xl bg-zinc-800/50 border border-zinc-700 text-white placeholder-zinc-500 text-center text-xl font-bold tracking-widest focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all"
               />
-            </div>
             </div>
             
             <div className="px-2 mb-4 md:mb-6">
