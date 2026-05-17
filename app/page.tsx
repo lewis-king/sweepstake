@@ -1292,6 +1292,40 @@ export default function SweepstakeApp() {
     
   }, [room.session]);
 
+  // Screen Wake Lock - keep screen on during draw
+  useEffect(() => {
+    let wakeLock: any = null;
+
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          wakeLock.addEventListener('release', () => {
+            console.log('Wake Lock released');
+          });
+        }
+      } catch (err) {
+        console.log('Wake Lock request failed:', err);
+      }
+    };
+
+    const releaseWakeLock = async () => {
+      if (wakeLock !== null) {
+        await wakeLock.release();
+        wakeLock = null;
+      }
+    };
+
+    // Request wake lock when draw starts
+    if (room.session?.status === 'DRAWING') {
+      requestWakeLock();
+    }
+
+    // Release wake lock when draw ends or status changes
+    return () => {
+      releaseWakeLock();
+    };
+  }, [room.session?.status]);
 
   if (view === 'welcome') {
     return (
