@@ -1163,9 +1163,7 @@ export default function SweepstakeApp() {
   const { updateStatus, isUpdating } = useUpdateRoomStatus(roomId || '');
   const room = useRoom(roomId ?? undefined);
 
-const currentPlayerName = useRef(
-  typeof window !== 'undefined' ? localStorage.getItem('sweepstake_player_name') || '' : ''
-);
+const currentPlayerName = useRef(''); // Set when user enters name
 
   // Watch for session status changes - if COMPLETED, show results
   useEffect(() => {
@@ -1175,16 +1173,13 @@ const currentPlayerName = useRef(
   }, [room.session?.status, view]);
 
 
-  // Load current player name from localStorage after mount
-  useEffect(() => {
-    const savedName = localStorage.getItem('sweepstake_player_name');
-    if (savedName) {
-      currentPlayerName.current = savedName;
-    }
-  }, []);
 
   const handleCreateRoom = async (name: string) => {
     if (!name.trim()) return;
+    
+    // Set current player name (for host detection)
+    currentPlayerName.current = name.trim();
+    localStorage.setItem('sweepstake_player_name', name.trim());
     
     const result = await createRoom(name.trim(), null);
     
@@ -1202,6 +1197,10 @@ const currentPlayerName = useRef(
       
       return;
     }
+    
+    // Set current player name (for host detection)
+    currentPlayerName.current = name.trim();
+    localStorage.setItem('sweepstake_player_name', name.trim());
     
     const playerName = name.trim() || generateRandomPlayerName();
     
