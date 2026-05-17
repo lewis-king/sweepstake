@@ -16,7 +16,7 @@ enum SessionStatus {
 model Session {
   id            String        @id @default(cuid())
   roomCode      String        @unique @db.VarChar(6)
-  hostId        String
+  hostId        String        // This is the HOST'S NAME, not a device ID
   targetPlayers Int?
   seed          Float
   status        SessionStatus @default(WAITING)

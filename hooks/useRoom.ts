@@ -25,20 +25,6 @@ const fetcher = async (url: string) => {
   return res.json();
 };
 
-export function getDeviceId(): string {
-  if (typeof window === 'undefined') return 'server';
-  
-  const STORAGE_KEY = 'sweepstake_device_id';
-  let deviceId = localStorage.getItem(STORAGE_KEY);
-  
-  if (!deviceId) {
-    deviceId = `device_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 9)}`;
-    localStorage.setItem(STORAGE_KEY, deviceId);
-  }
-  
-  return deviceId;
-}
-
 export function generateRandomPlayerName(): string {
   const adjectives = ['Swift', 'Bold', 'Clever', 'Fierce', 'Lucky', 'Golden', 'Silver', 'Rapid', 'Mighty', 'Sly'];
   const nouns = ['Eagle', 'Tiger', 'Wolf', 'Lion', 'Hawk', 'Panther', 'Bull', 'Falcon', 'Bear', 'Ram'];
@@ -49,7 +35,7 @@ export function useCreateRoom() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createRoom = async (hostId: string, targetPlayers: number | null, playerName?: string) => {
+  const createRoom = async (playerName: string, targetPlayers: number | null) => {
     setIsCreating(true);
     setError(null);
 
@@ -57,7 +43,7 @@ export function useCreateRoom() {
       const response = await fetch('/api/room', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hostId, targetPlayers, playerName }),
+        body: JSON.stringify({ playerName, targetPlayers }),
       });
 
       if (!response.ok) {
@@ -82,13 +68,13 @@ export function useCreateRoom() {
 export function useJoinRoom(roomId: string) {
   const [isJoining, setIsJoining] = useState(false);
 
-  const joinRoom = useCallback(async (name: string, deviceId: string) => {
+  const joinRoom = useCallback(async (name: string) => {
     setIsJoining(true);
     try {
       const res = await fetch(`/api/room/${roomId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerName: name, deviceId }),
+        body: JSON.stringify({ playerName: name }),
       });
       if (!res.ok) throw new Error(await res.text());
       const player = await res.json();
@@ -107,7 +93,7 @@ export function useJoinRoomByCode() {
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const joinRoomByCode = async (code: string, playerName: string, deviceId: string) => {
+  const joinRoomByCode = async (code: string, playerName: string) => {
     setIsJoining(true);
     setError(null);
 
@@ -123,7 +109,7 @@ export function useJoinRoomByCode() {
       const response = await fetch(`/api/room/${roomId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playerName, deviceId }),
+        body: JSON.stringify({ playerName }),
       });
 
       if (!response.ok) {

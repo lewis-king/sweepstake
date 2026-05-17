@@ -29,11 +29,11 @@ async function generateUniqueRoomCode(): Promise<string> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { hostId, targetPlayers, playerName } = body;
+    const { targetPlayers, playerName } = body;
 
-    if (!hostId) {
+    if (!playerName) {
       return NextResponse.json(
-        { error: "Invalid parameters. hostId is required" },
+        { error: "Invalid parameters. playerName is required" },
         { status: 400 }
       );
     }
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       .from("sessions")
       .insert({
         room_code: roomCode,
-        host_id: hostId,
+        host_id: playerName,  // Host ID is the HOST'S NAME
         target_players: targetPlayers,
         seed: seed,
         status: "WAITING",
@@ -65,14 +65,12 @@ export async function POST(request: NextRequest) {
 
     if (sessionError) throw sessionError;
 
-    // Add host as first player if playerName provided
-    if (playerName) {
-      const { error: playerError } = await supabase.from("players").insert({
-        session_id: session.id,
-        name: playerName,
-      });
-      if (playerError) console.error("Error adding host player:", playerError);
-    }
+    // Add host as first player
+    const { error: playerError } = await supabase.from("players").insert({
+      session_id: session.id,
+      name: playerName,
+    });
+    if (playerError) console.error("Error adding host player:", playerError);
 
     // Fetch players for this session
     const { data: players } = await supabase
@@ -98,13 +96,12 @@ export async function GET() {
   try {
     const { data: rooms, error } = await supabase
       .from("sessions")
-      .select("*, players(*)")
-      .in("status", ["WAITING", "DRAWING"])
+      .select("*")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
 
-    return NextResponse.json({ rooms });
+    return NextResponse.json(rooms || []);
   } catch (error) {
     console.error("Error fetching rooms:", error);
     return NextResponse.json({ error: "Failed to fetch rooms" }, { status: 500 });

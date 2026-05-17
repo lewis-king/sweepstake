@@ -38,11 +38,11 @@ export async function POST(
   try {
     const { roomId } = await params;
     const body = await request.json();
-    const { playerName, deviceId } = body;
+    const { playerName } = body;
 
-    if (!playerName || !deviceId) {
+    if (!playerName) {
       return NextResponse.json(
-        { error: "playerName and deviceId are required" },
+        { error: "playerName is required" },
         { status: 400 }
       );
     }

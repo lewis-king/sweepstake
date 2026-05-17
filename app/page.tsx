@@ -8,7 +8,6 @@ import {
   useJoinRoomByCode,
   useRoom,
   useUpdateRoomStatus,
-  getDeviceId,
   generateRandomPlayerName,
   type Session,
   type Player,
@@ -1164,7 +1163,7 @@ export default function SweepstakeApp() {
   const { updateStatus, isUpdating } = useUpdateRoomStatus(roomId || '');
   const room = useRoom(roomId ?? undefined);
 
-  const deviceId = useRef(getDeviceId());
+  const currentPlayerName = useRef('');
 
   // Watch for session status changes - if COMPLETED, show results
   useEffect(() => {
@@ -1173,10 +1172,19 @@ export default function SweepstakeApp() {
     }
   }, [room.session?.status, view]);
 
+
+  // Load current player name from localStorage after mount
+  useEffect(() => {
+    const savedName = localStorage.getItem('sweepstake_player_name');
+    if (savedName) {
+      currentPlayerName.current = savedName;
+    }
+  }, []);
+
   const handleCreateRoom = async (name: string) => {
     if (!name.trim()) return;
     
-    const result = await createRoom(deviceId.current, null, name.trim());
+    const result = await createRoom(name.trim(), null);
     
     if (result?.sessionId) {
       
@@ -1195,7 +1203,7 @@ export default function SweepstakeApp() {
     
     const playerName = name.trim() || generateRandomPlayerName();
     
-    const result = await joinRoomByCode(code.toUpperCase(), playerName, deviceId.current);
+    const result = await joinRoomByCode(code.toUpperCase(), playerName);
     
     if (result?.sessionId) {
       
@@ -1271,7 +1279,7 @@ export default function SweepstakeApp() {
   // Initialize non-host reveal index when entering reveal view
   useEffect(() => {
     if (view === 'lobby' && room.session?.status === 'DRAWING') {
-      const isHost = room.session.hostId === deviceId.current;
+      const isHost = room.session.hostId === currentPlayerName.current;
       if (!isHost && !nonHostInitialized.current) {
         const assignedCount = room.session.players.filter(p => p.assignedTeam).length;
         setNonHostRevealIndex(assignedCount);
@@ -1355,7 +1363,7 @@ export default function SweepstakeApp() {
 
   // Non-host users watching the draw
   if (view === 'lobby' && room.session?.status === 'DRAWING') {
-    const isHost = room.session.hostId === deviceId.current;
+    const isHost = room.session.hostId === currentPlayerName.current;
     
     if (!isHost) {
       const playerNames = room.session.players.map(p => p.name);
@@ -1399,7 +1407,7 @@ export default function SweepstakeApp() {
         </div>
       );
     }
-    const isHost = room.session.hostId === deviceId.current;
+    const isHost = room.session.hostId === currentPlayerName.current;
     return (
       <LobbyScreen 
         session={room.session}
@@ -1417,7 +1425,7 @@ export default function SweepstakeApp() {
         <LobbyScreen 
           session={room.session}
           onStartDraw={startDraw}
-          isHost={room.session.hostId === deviceId.current}
+          isHost={room.session.hostId === currentPlayerName.current}
           isUpdating={isUpdating}
           onShowAssignments={handleShowAssignments}
         />
