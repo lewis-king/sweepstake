@@ -1163,7 +1163,9 @@ export default function SweepstakeApp() {
   const { updateStatus, isUpdating } = useUpdateRoomStatus(roomId || '');
   const room = useRoom(roomId ?? undefined);
 
-  const currentPlayerName = useRef('');
+const currentPlayerName = useRef(
+  typeof window !== 'undefined' ? localStorage.getItem('sweepstake_player_name') || '' : ''
+);
 
   // Watch for session status changes - if COMPLETED, show results
   useEffect(() => {
