@@ -864,7 +864,7 @@ function ResultsDashboard({ session }: { session: Session }) {
 
 // Welcome Screen
 function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error }: {
-  onCreateRoom: (targetPlayers: number, playerName: string) => void;
+  onCreateRoom: (playerName: string) => void;
   onJoinRoom: (roomCode: string, playerName: string) => void;
   isCreating: boolean;
   isJoining: boolean;
@@ -872,7 +872,6 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
 }) {
   const [playerName, setPlayerName] = useState('');
   const [roomCode, setRoomCode] = useState('');
-  const [targetPlayers, setTargetPlayers] = useState(12);
   
   const titleText = useTypewriter("WORLD CUP 2026", 100);
 
@@ -967,7 +966,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onCreateRoom(targetPlayers, playerName)}
+              onClick={() => onCreateRoom(playerName)}
               disabled={!playerName.trim() || isCreating}
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 font-black italic text-zinc-900 text-lg md:text-xl shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
@@ -1091,7 +1090,7 @@ function LobbyScreen({
           animate={{ opacity: 1, scale: 1 }}
           className="text-center mb-4"
         >
-          <NumberCounter value={playerCount} label={session.targetPlayers.toString()} />
+          <NumberCounter value={playerCount} label={"PLAYERS"} />
           <motion.p
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -1198,10 +1197,10 @@ export default function SweepstakeApp() {
 
   const deviceId = useRef(getDeviceId());
 
-  const handleCreateRoom = async (targetPlayers: number, name: string) => {
+  const handleCreateRoom = async (name: string) => {
     if (!name.trim()) return;
     
-    const result = await createRoom(deviceId.current, targetPlayers, name.trim());
+    const result = await createRoom(deviceId.current, null, name.trim());
     
     if (result?.sessionId) {
       

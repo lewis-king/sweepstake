@@ -31,11 +31,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { hostId, targetPlayers, playerName } = body;
 
-    if (!hostId || !targetPlayers || targetPlayers < 2 || targetPlayers > 48) {
+    if (!hostId) {
       return NextResponse.json(
-        { error: "Invalid parameters. targetPlayers must be between 2 and 48" },
+        { error: "Invalid parameters. hostId is required" },
         { status: 400 }
       );
+    }
+
+    // Validate targetPlayers if provided
+    if (targetPlayers !== undefined && targetPlayers !== null) {
+      if (targetPlayers < 2 || targetPlayers > 48) {
+        return NextResponse.json(
+          { error: "Invalid parameters. targetPlayers must be between 2 and 48" },
+          { status: 400 }
+        );
+      }
     }
 
     const roomCode = await generateUniqueRoomCode();

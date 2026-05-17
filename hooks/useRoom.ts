@@ -27,7 +27,16 @@ const fetcher = async (url: string) => {
 
 export function getDeviceId(): string {
   if (typeof window === 'undefined') return 'server';
-  return `device_${Math.random().toString(36).substring(2, 9)}${Date.now().toString(36)}`;
+  
+  const STORAGE_KEY = 'sweepstake_device_id';
+  let deviceId = localStorage.getItem(STORAGE_KEY);
+  
+  if (!deviceId) {
+    deviceId = `device_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 9)}`;
+    localStorage.setItem(STORAGE_KEY, deviceId);
+  }
+  
+  return deviceId;
 }
 
 export function generateRandomPlayerName(): string {

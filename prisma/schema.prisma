@@ -17,7 +17,7 @@ model Session {
   id            String        @id @default(cuid())
   roomCode      String        @unique @db.VarChar(6)
   hostId        String
-  targetPlayers Int
+  targetPlayers Int?
   seed          Float
   status        SessionStatus @default(WAITING)
   createdAt     DateTime      @default(now())
