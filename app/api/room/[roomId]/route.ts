@@ -81,11 +81,14 @@ export async function POST(
       );
     }
 
-    if ((players || []).length >= session.target_players) {
-      return NextResponse.json(
-        { error: "Room is full" },
-        { status: 400 }
-      );
+    // Only check if room is full if target_players is set and > 0
+    if (session.target_players && session.target_players > 0) {
+      if ((players || []).length >= session.target_players) {
+        return NextResponse.json(
+          { error: "Room is full" },
+          { status: 400 }
+        );
+      }
     }
 
     // Insert new player
