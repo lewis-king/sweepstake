@@ -578,7 +578,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
                     initial={{ scale: 0, opacity: 0, rotate: -180 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
                     transition={{ delay: 0.4, type: 'spring', damping: 10 }}
-                    className="absolute -top-16 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-red-600 via-orange-600 to-red-600 rounded-full shadow-[0_0_40px_rgba(239,68,68,0.8)] border-2 border-yellow-400 z-20"
+                    className="absolute -top-6 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-red-600 via-orange-600 to-red-600 rounded-full shadow-[0_0_40px_rgba(239,68,68,0.8)] border-2 border-yellow-400 z-20"
                   >
                     <span className="text-white font-black text-sm md:text-base tracking-widest uppercase flex items-center gap-2">
                       <span>🔥</span> TOP PICK <span>🔥</span>
@@ -631,20 +631,17 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
         {/* Celebration Text */}
         {phase === 'celebrate' && (
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
             className="mt-8 space-y-2"
           >
-            {isTop5 && (
-              <motion.p
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', damping: 10 }}
-                className="text-3xl md:text-5xl font-black italic bg-gradient-to-r from-red-400 via-orange-400 to-red-400 bg-clip-text text-transparent tracking-widest drop-shadow-[0_0_30px_rgba(239,68,68,0.5)]"
-              >
+            {/* Reserve space for top pick to prevent layout shift */}
+            <div className={`${isTop5 ? '' : 'invisible'}`}>
+              <p className="text-3xl md:text-5xl font-black italic bg-gradient-to-r from-red-400 via-orange-400 to-red-400 bg-clip-text text-transparent tracking-widest drop-shadow-[0_0_30px_rgba(239,68,68,0.5)]">
                 🔥🔥🔥 TOP PICK! 🔥🔥🔥
-              </motion.p>
-            )}
+              </p>
+            </div>
             <p className="text-lg md:text-xl font-bold text-zinc-400 tracking-widest">
               YOU'RE THE
             </p>
