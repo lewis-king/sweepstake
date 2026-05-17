@@ -474,14 +474,14 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
     
     const sequence = isTop5 ? [
       { phase: 'buildup' as const, delay: 4000 },
-      { phase: 'reveal' as const, delay: 14000 },
-      { phase: 'celebrate' as const, delay: 30000 },
-      { phase: 'exit' as const, delay: 35000 },
+      { phase: 'reveal' as const, delay: 8000 },
+      { phase: 'celebrate' as const, delay: 25000 },
+      { phase: 'exit' as const, delay: 30000 },
     ] : [
       { phase: 'buildup' as const, delay: 5000 },
-      { phase: 'reveal' as const, delay: 15000 },
-      { phase: 'celebrate' as const, delay: 30000 },
-      { phase: 'exit' as const, delay: 35000 },
+      { phase: 'reveal' as const, delay: 9000 },
+      { phase: 'celebrate' as const, delay: 26000 },
+      { phase: 'exit' as const, delay: 31000 },
     ];
 
     const timeouts: NodeJS.Timeout[] = [];
