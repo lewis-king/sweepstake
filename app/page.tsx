@@ -1166,6 +1166,13 @@ export default function SweepstakeApp() {
 
   const deviceId = useRef(getDeviceId());
 
+  // Watch for session status changes - if COMPLETED, show results
+  useEffect(() => {
+    if (room.session?.status === 'COMPLETED' && view !== 'results') {
+      setView('results');
+    }
+  }, [room.session?.status, view]);
+
   const handleCreateRoom = async (name: string) => {
     if (!name.trim()) return;
     
@@ -1193,7 +1200,12 @@ export default function SweepstakeApp() {
     if (result?.sessionId) {
       
       setRoomId(result.sessionId);
-      setView('lobby');
+      // Set view based on session status
+      if (result.status === 'COMPLETED') {
+        setView('results');
+      } else {
+        setView('lobby');
+      }
     } else {
       
     }
