@@ -28,10 +28,12 @@ export async function POST(
       return NextResponse.json({ error: "Player not found" }, { status: 404 });
     }
 
-    // Update the player's assigned team
+    // Update the player.s assigned team (append to existing if any)
+    const existingTeams = player.assigned_team ? player.assigned_team.split(", ").filter(Boolean) : [];
+    const newTeams = [...existingTeams, teamName].join(", ");
     const { error: updateError } = await supabase
       .from("players")
-      .update({ assigned_team: teamName })
+      .update({ assigned_team: newTeams })
       .eq("id", player.id);
 
     if (updateError) throw updateError;
