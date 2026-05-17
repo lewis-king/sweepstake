@@ -183,15 +183,24 @@ export function generateRevealQueue(
   const shuffledTier3 = seededShuffle(Math.floor(sessionSeed * 1002), tier3);
   const shuffledTier4 = seededShuffle(Math.floor(sessionSeed * 1003), tier4);
   
-  // Interleave tiers: t1[0], t2[0], t3[0], t4[0], t1[1], t2[1], ...
-  // This ensures balanced distribution across tiers
-  const interleavedTeams: typeof WORLD_CUP_2026_TEAMS[0][] = [];
-  for (let i = 0; i < 12; i++) {
-    interleavedTeams.push(shuffledTier1[i]);
-    interleavedTeams.push(shuffledTier2[i]);
-    interleavedTeams.push(shuffledTier3[i]);
-    interleavedTeams.push(shuffledTier4[i]);
-  }
+  // Create position arrays for each tier (every 4th position)
+  const tier1Positions = [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44];
+  const tier2Positions = [1, 5, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45];
+  const tier3Positions = [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46];
+  const tier4Positions = [3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47];
+
+  // Shuffle positions within each tier so best/worst teams scatter throughout reveal
+  const shuffledTier1Pos = seededShuffle(Math.floor(sessionSeed * 2000), tier1Positions);
+  const shuffledTier2Pos = seededShuffle(Math.floor(sessionSeed * 2001), tier2Positions);
+  const shuffledTier3Pos = seededShuffle(Math.floor(sessionSeed * 2002), tier3Positions);
+  const shuffledTier4Pos = seededShuffle(Math.floor(sessionSeed * 2003), tier4Positions);
+
+  // Build interleaved array with shuffled positions
+  const interleavedTeams: (typeof WORLD_CUP_2026_TEAMS[0])[] = new Array(48);
+  shuffledTier1Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier1[i]);
+  shuffledTier2Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier2[i]);
+  shuffledTier3Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier3[i]);
+  shuffledTier4Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier4[i]);
   
   // Shuffle player order using a derived seed (different from team shuffle)
   // This ensures fair rotation - first joiner doesn't always get first pick
