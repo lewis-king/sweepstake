@@ -91,6 +91,14 @@ export async function POST(
       }
     }
 
+    // Hard limit: never more than 48 players (World Cup teams)
+    if ((players || []).length >= 48) {
+      return NextResponse.json(
+        { error: "Room is full" },
+        { status: 400 }
+      );
+    }
+
     // Insert new player
     const { data: player, error: playerError } = await supabase
       .from("players")
