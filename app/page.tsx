@@ -255,7 +255,7 @@ function PlayerCard({ player, isDrawing }: { player: Player; isDrawing: boolean 
                     transition={{ duration: 2, repeat: Infinity }}
                     className="text-zinc-500 text-sm mt-1"
                   >
-                    Waiting for assignment...
+                    Waiting for players...
                   </motion.p>
                 )}
               </div>
@@ -526,7 +526,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
               transition={{ duration: 2, repeat: Infinity }}
               className="text-yellow-400 font-bold text-sm md:text-base mb-3 tracking-[0.3em] uppercase"
             >
-              Assigned To
+              Drawing...
             </motion.p>
             <motion.h2
               initial={{ scale: 0.8, opacity: 0 }}
