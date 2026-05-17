@@ -150,7 +150,7 @@ function AnimatedTrophy() {
 }
 
 // Player Card with Premium Design
-function PlayerCard({ player, isDRAWING { player: Player; isDRAWINGoolean }) {
+function PlayerCard({ player, isDrawing }: { player: Player; isDrawing: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -1112,7 +1112,7 @@ function LobbyScreen({
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <PlayerCard player={player} isDRAWINGession.status === 'DRAWING'} />
+                <PlayerCard player={player} isDrawing={session.status === 'DRAWING'} />
               </motion.div>
             ))}
           </AnimatePresence>
