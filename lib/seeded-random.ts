@@ -125,6 +125,12 @@ export function getTeamAdjective(odds: string): string {
   return "LOTTERY TICKET";
 }
 
+// Parse odds string like "4/1" into a number for sorting
+export function parseOdds(odds: string): number {
+  const parts = odds.split('/');
+  return parseFloat(parts[0]) / parseFloat(parts[1]);
+}
+
 // Perform the deterministic team assignment
 // Takes session seed and array of player names, returns player-team pairs (one per player)
 export function performDeterministicDraw(
@@ -150,6 +156,8 @@ export function performDeterministicDraw(
 
 // Generate the full reveal queue for the sweepstake
 // Distributes all 48 teams round-robin style among players
+// Teams are first divided into 4 tiers by odds, then shuffled within tier,
+// then interleaved (tier1→tier2→tier3→tier4→repeat) for balanced distribution
 // Both team order AND player order are shuffled deterministically by seed
 export function generateRevealQueue(
   sessionSeed: number,
@@ -157,8 +165,33 @@ export function generateRevealQueue(
 ): { playerName: string; team: typeof WORLD_CUP_2026_TEAMS[0] }[] {
   const numPlayers = playerNames.length;
   
-  // Shuffle all 48 teams using session seed
-  const shuffledTeams = seededShuffle(Math.floor(sessionSeed * 1000), WORLD_CUP_2026_TEAMS);
+  // Sort teams by odds (best/lowest first)
+  const sortedTeams = [...WORLD_CUP_2026_TEAMS].sort(
+    (a, b) => parseOdds(a.odds) - parseOdds(b.odds)
+  );
+  
+  // Divide into 4 tiers of 12 teams each
+  const tier1 = sortedTeams.slice(0, 12);   // Top 12 - favorites
+  const tier2 = sortedTeams.slice(12, 24);  // Next 12
+  const tier3 = sortedTeams.slice(24, 36);  // Next 12
+  const tier4 = sortedTeams.slice(36, 48);  // Bottom 12 - longshots
+  
+  // Shuffle each tier independently using derived seeds
+  // This preserves luck within each tier
+  const shuffledTier1 = seededShuffle(Math.floor(sessionSeed * 1000), tier1);
+  const shuffledTier2 = seededShuffle(Math.floor(sessionSeed * 1001), tier2);
+  const shuffledTier3 = seededShuffle(Math.floor(sessionSeed * 1002), tier3);
+  const shuffledTier4 = seededShuffle(Math.floor(sessionSeed * 1003), tier4);
+  
+  // Interleave tiers: t1[0], t2[0], t3[0], t4[0], t1[1], t2[1], ...
+  // This ensures balanced distribution across tiers
+  const interleavedTeams: typeof WORLD_CUP_2026_TEAMS[0][] = [];
+  for (let i = 0; i < 12; i++) {
+    interleavedTeams.push(shuffledTier1[i]);
+    interleavedTeams.push(shuffledTier2[i]);
+    interleavedTeams.push(shuffledTier3[i]);
+    interleavedTeams.push(shuffledTier4[i]);
+  }
   
   // Shuffle player order using a derived seed (different from team shuffle)
   // This ensures fair rotation - first joiner doesn't always get first pick
@@ -171,17 +204,11 @@ export function generateRevealQueue(
     const playerIdx = i % numPlayers;
     revealQueue.push({
       playerName: shuffledPlayerNames[playerIdx],
-      team: shuffledTeams[i],
+      team: interleavedTeams[i],
     });
   }
   
   return revealQueue;
-}
-
-// Parse odds string like "4/1" into a number for sorting
-export function parseOdds(odds: string): number {
-  const parts = odds.split('/');
-  return parseFloat(parts[0]) / parseFloat(parts[1]);
 }
 
 // Check if team is top 5 favorite by odds
