@@ -560,7 +560,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
               />
               
               {/* Main Card */}
-              <div className="relative bg-zinc-900/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8 md:p-12">
+              <div className="relative bg-zinc-900/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8 pr-10 md:p-12 md:pr-14">
             {/* Note: removed overflow-hidden to allow badge to extend above card */}
                 {/* Flag */}
                 <motion.div

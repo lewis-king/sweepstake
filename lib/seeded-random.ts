@@ -114,7 +114,7 @@ export function getTeamAdjective(odds: string): string {
   const [numerator] = odds.split('/').map(Number);
   
   if (numerator <= 4) return "CHAMPION-LEVEL";
-  if (numerator <= 9) return "TITLE-CONTENDER";
+  if (numerator <= 9) return "CUP-CONTENDER";
   if (numerator <= 17) return "DANGEROUS DARK HORSE";
   if (numerator <= 22) return "SERIOUS THREAT";
   if (numerator <= 40) return "UPSET SPECIALISTS";
