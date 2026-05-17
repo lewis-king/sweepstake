@@ -2,7 +2,7 @@
 
 ## 🎬 Live Demo
 
-**https://worldcupsweepstake.app/**
+**https://worldcupsweepstake.app**
 
 A theatrical, mobile-first World Cup sweepstake application with AAA sports video game aesthetics — think FIFA Ultimate Team pack openings meets premium sports broadcasting.
 
