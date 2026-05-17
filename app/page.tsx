@@ -591,7 +591,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
                   initial={{ y: 50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className={`text-5xl md:text-8xl font-black italic bg-gradient-to-br ${
+                  className={`text-5xl md:text-8xl font-black italic pr-8 md:pr-12 bg-gradient-to-br ${
                     isTop5 
                       ? 'from-red-200 via-orange-400 to-red-600 drop-shadow-[0_0_60px_rgba(239,68,68,0.6)]'
                       : 'from-yellow-200 via-yellow-400 to-yellow-600 drop-shadow-[0_0_40px_rgba(251,191,36,0.5)]'
