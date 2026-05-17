@@ -150,21 +150,27 @@ export function performDeterministicDraw(
 
 // Generate the full reveal queue for the sweepstake
 // Distributes all 48 teams round-robin style among players
+// Both team order AND player order are shuffled deterministically by seed
 export function generateRevealQueue(
   sessionSeed: number,
   playerNames: string[]
 ): { playerName: string; team: typeof WORLD_CUP_2026_TEAMS[0] }[] {
   const numPlayers = playerNames.length;
   
-  // Shuffle all 48 teams
+  // Shuffle all 48 teams using session seed
   const shuffledTeams = seededShuffle(Math.floor(sessionSeed * 1000), WORLD_CUP_2026_TEAMS);
   
-  // Create reveal queue: round-robin assignment to players
+  // Shuffle player order using a derived seed (different from team shuffle)
+  // This ensures fair rotation - first joiner doesn't always get first pick
+  const playerOrderSeed = Math.floor(sessionSeed * 7919) + 12345;
+  const shuffledPlayerNames = seededShuffle(playerOrderSeed, playerNames);
+  
+  // Create reveal queue: round-robin assignment using shuffled player order
   const revealQueue: { playerName: string; team: typeof WORLD_CUP_2026_TEAMS[0] }[] = [];
   for (let i = 0; i < 48; i++) {
     const playerIdx = i % numPlayers;
     revealQueue.push({
-      playerName: playerNames[playerIdx],
+      playerName: shuffledPlayerNames[playerIdx],
       team: shuffledTeams[i],
     });
   }
