@@ -924,7 +924,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           {/* Player Count Slider */}
           <div className="mb-5 md:mb-6">
             <div className="flex items-center justify-between mb-4 px-1">
-              <label className="text-zinc-400 font-semibold tracking-wide px-1">TARGET PLAYERS</label>
+              <label className="text-zinc-400 font-semibold tracking-wide px-1">PLAYERS</label>
               <motion.span
                 key={targetPlayers}
                 initial={{ scale: 1.5, opacity: 0 }}
