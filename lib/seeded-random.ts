@@ -155,68 +155,66 @@ export function performDeterministicDraw(
 }
 
 // Generate the full reveal queue for the sweepstake
-// Distributes all 48 teams round-robin style among players
-// Teams are first divided into 4 tiers by odds, then shuffled within tier,
-// then interleaved (tier1→tier2→tier3→tier4→repeat) for balanced distribution
-// Both team order AND player order are shuffled deterministically by seed
+// Uses tiered distribution for fairness - each player gets similar quality teams
+// Prevents one player getting all favorites while another gets all longshots
 export function generateRevealQueue(
   sessionSeed: number,
   playerNames: string[]
 ): { playerName: string; team: typeof WORLD_CUP_2026_TEAMS[0] }[] {
   const numPlayers = playerNames.length;
   
-  // Sort teams by odds (best/lowest first)
+  // 1. Tiering Teams by Odds
   const sortedTeams = [...WORLD_CUP_2026_TEAMS].sort(
     (a, b) => parseOdds(a.odds) - parseOdds(b.odds)
   );
   
-  // Divide into 4 tiers of 12 teams each
-  const tier1 = sortedTeams.slice(0, 12);   // Top 12 - favorites
-  const tier2 = sortedTeams.slice(12, 24);  // Next 12
-  const tier3 = sortedTeams.slice(24, 36);  // Next 12
-  const tier4 = sortedTeams.slice(36, 48);  // Bottom 12 - longshots
-  
-  // Shuffle each tier independently using derived seeds
-  // This preserves luck within each tier
-  const shuffledTier1 = seededShuffle(Math.floor(sessionSeed * 1000), tier1);
-  const shuffledTier2 = seededShuffle(Math.floor(sessionSeed * 1001), tier2);
-  const shuffledTier3 = seededShuffle(Math.floor(sessionSeed * 1002), tier3);
-  const shuffledTier4 = seededShuffle(Math.floor(sessionSeed * 1003), tier4);
-  
-  // Create position arrays for each tier (every 4th position)
-  const tier1Positions = [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44];
-  const tier2Positions = [1, 5, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45];
-  const tier3Positions = [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46];
-  const tier4Positions = [3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47];
+  // 2. Shuffle each tier independently to ensure randomness within the tier
+  const shuffledT1 = seededShuffle(sessionSeed + 1, sortedTeams.slice(0, 12));
+  const shuffledT2 = seededShuffle(sessionSeed + 2, sortedTeams.slice(12, 24));
+  const shuffledT3 = seededShuffle(sessionSeed + 3, sortedTeams.slice(24, 36));
+  const shuffledT4 = seededShuffle(sessionSeed + 4, sortedTeams.slice(36, 48));
 
-  // Shuffle positions within each tier so best/worst teams scatter throughout reveal
-  const shuffledTier1Pos = seededShuffle(Math.floor(sessionSeed * 2000), tier1Positions);
-  const shuffledTier2Pos = seededShuffle(Math.floor(sessionSeed * 2001), tier2Positions);
-  const shuffledTier3Pos = seededShuffle(Math.floor(sessionSeed * 2002), tier3Positions);
-  const shuffledTier4Pos = seededShuffle(Math.floor(sessionSeed * 2003), tier4Positions);
+  // 3. Create the Master Deck (Heavy hitters on top, longshots on bottom)
+  const masterDeck = [...shuffledT1, ...shuffledT2, ...shuffledT3, ...shuffledT4];
 
-  // Build interleaved array with shuffled positions
-  const interleavedTeams: (typeof WORLD_CUP_2026_TEAMS[0])[] = new Array(48);
-  shuffledTier1Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier1[i]);
-  shuffledTier2Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier2[i]);
-  shuffledTier3Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier3[i]);
-  shuffledTier4Pos.forEach((pos, i) => interleavedTeams[pos] = shuffledTier4[i]);
+  // 4. Deal the cards fairly into Player Hands
+  const playerHands: Record<string, typeof WORLD_CUP_2026_TEAMS[0][]> = {};
+  playerNames.forEach(name => playerHands[name] = []);
   
-  // Shuffle player order using a derived seed (different from team shuffle)
-  // This ensures fair rotation - first joiner doesn't always get first pick
-  const playerOrderSeed = Math.floor(sessionSeed * 7919) + 12345;
-  const shuffledPlayerNames = seededShuffle(playerOrderSeed, playerNames);
+  // Shuffle the player order so the "first pick" advantage is random
+  const playerDealOrder = seededShuffle(sessionSeed + 100, playerNames);
   
-  // Create reveal queue: round-robin assignment using shuffled player order
+  masterDeck.forEach((team, i) => {
+    // Continuous round-robin distribution guarantees max variance between players is never > 1
+    const playerName = playerDealOrder[i % numPlayers];
+    playerHands[playerName].push(team);
+  });
+
+  // 5. The Suspense Shuffle
+  // Shuffle each player's individual hand so they don't know the order their teams will be revealed
+  Object.keys(playerHands).forEach((name, i) => {
+    playerHands[name] = seededShuffle(sessionSeed + 1000 + i, playerHands[name]);
+  });
+
+  // 6. Construct the Round-Robin Reveal
+  // Establish the fixed turn order for the TV/Mobile screen
+  const screenTurnOrder = seededShuffle(sessionSeed + 2000, playerNames);
   const revealQueue: { playerName: string; team: typeof WORLD_CUP_2026_TEAMS[0] }[] = [];
-  for (let i = 0; i < 48; i++) {
-    const playerIdx = i % numPlayers;
-    revealQueue.push({
-      playerName: shuffledPlayerNames[playerIdx],
-      team: interleavedTeams[i],
+  
+  const maxHandSize = Math.max(...Object.values(playerHands).map(hand => hand.length));
+
+  // Loop through rounds, pulling one card from each player's hand per rotation
+  for (let round = 0; round < maxHandSize; round++) {
+    screenTurnOrder.forEach(playerName => {
+      if (playerHands[playerName][round]) {
+        revealQueue.push({
+          playerName,
+          team: playerHands[playerName][round]
+        });
+      }
     });
   }
-  
+
   return revealQueue;
 }
 
