@@ -49,7 +49,7 @@ export function useCreateRoom() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createRoom = async (hostId: string, targetPlayers: number, playerName?: string) => {
+  const createRoom = async (hostId: string, targetPlayers: number | null, playerName?: string) => {
     setIsCreating(true);
     setError(null);
 
