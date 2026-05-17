@@ -560,7 +560,8 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
               />
               
               {/* Main Card */}
-              <PremiumCard className="p-8 md:p-12 relative">
+              <div className="relative bg-zinc-900/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8 md:p-12">
+            {/* Note: removed overflow-hidden to allow badge to extend above card */}
                 {/* Flag */}
                 <motion.div
                   initial={{ scale: 0 }}
@@ -577,7 +578,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
                     initial={{ scale: 0, opacity: 0, rotate: -180 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
                     transition={{ delay: 0.4, type: 'spring', damping: 10 }}
-                    className="absolute -top-12 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-red-600 via-orange-600 to-red-600 rounded-full shadow-[0_0_40px_rgba(239,68,68,0.8)] border-2 border-yellow-400 z-20"
+                    className="absolute -top-16 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-red-600 via-orange-600 to-red-600 rounded-full shadow-[0_0_40px_rgba(239,68,68,0.8)] border-2 border-yellow-400 z-20"
                   >
                     <span className="text-white font-black text-sm md:text-base tracking-widest uppercase flex items-center gap-2">
                       <span>🔥</span> TOP PICK <span>🔥</span>
@@ -608,7 +609,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
                 >
                   {team.code}
                 </motion.p>
-              </PremiumCard>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
