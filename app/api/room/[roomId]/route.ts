@@ -57,17 +57,29 @@ export async function POST(
       return NextResponse.json({ error: "Room not found" }, { status: 404 });
     }
 
+    // Get all players in this room
+    const { data: players } = await supabase
+      .from("players")
+      .select("*")
+      .eq("session_id", roomId);
+
+    // Check if this player already exists in the room - allow rejoin
+    const existingPlayer = players?.find(
+      (p) => p.name.toLowerCase() === playerName.toLowerCase()
+    );
+
+    if (existingPlayer) {
+      // Player already exists - return their record (rejoin)
+      return NextResponse.json(existingPlayer);
+    }
+
+    // New player - check if room is still accepting players
     if (session.status !== "WAITING") {
       return NextResponse.json(
         { error: "Room is no longer accepting players" },
         { status: 400 }
       );
     }
-
-    const { data: players } = await supabase
-      .from("players")
-      .select("*")
-      .eq("session_id", roomId);
 
     if ((players || []).length >= session.target_players) {
       return NextResponse.json(
@@ -76,17 +88,7 @@ export async function POST(
       );
     }
 
-    const existingPlayer = players?.find(
-      (p) => p.name.toLowerCase() === playerName.toLowerCase()
-    );
-
-    if (existingPlayer) {
-      return NextResponse.json(
-        { error: "Player name already taken" },
-        { status: 400 }
-      );
-    }
-
+    // Insert new player
     const { data: player, error: playerError } = await supabase
       .from("players")
       .insert({
