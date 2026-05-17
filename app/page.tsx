@@ -150,7 +150,7 @@ function AnimatedTrophy() {
 }
 
 // Player Card with Premium Design
-function PlayerCard({ player, isDrawing }: { player: Player; isDrawing: boolean }) {
+function PlayerCard({ player, isDRAWING { player: Player; isDRAWINGoolean }) {
   const [isHovered, setIsHovered] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -526,7 +526,7 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
               transition={{ duration: 2, repeat: Infinity }}
               className="text-yellow-400 font-bold text-sm md:text-base mb-3 tracking-[0.3em] uppercase"
             >
-              Drawing...
+              DRAWING
             </motion.p>
             <motion.h2
               initial={{ scale: 0.8, opacity: 0 }}
@@ -1112,7 +1112,7 @@ function LobbyScreen({
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <PlayerCard player={player} isDrawing={session.status === 'DRAWING'} />
+                <PlayerCard player={player} isDRAWINGession.status === 'DRAWING'} />
               </motion.div>
             ))}
           </AnimatePresence>
