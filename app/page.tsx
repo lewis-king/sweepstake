@@ -631,9 +631,9 @@ function PackReveal({ playerName, team, onComplete }: { playerName: string; team
         {/* Celebration Text */}
         {phase === 'celebrate' && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
             className="mt-8 space-y-2"
           >
             {/* Reserve space for top pick to prevent layout shift */}
