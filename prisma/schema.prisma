@@ -14,15 +14,16 @@ enum SessionStatus {
 }
 
 model Session {
-  id            String        @id @default(cuid())
-  roomCode      String        @unique @db.VarChar(6)
-  hostId        String        // This is the HOST'S NAME, not a device ID
+  id           String        @id @default(cuid())
+  roomCode     String        @unique @db.VarChar(6)
+  hostId       String        // This is the HOST'S NAME, not a device ID
   targetPlayers Int?
-  seed          Float
-  status        SessionStatus @default(WAITING)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  players       Player[]
+  seed         Float
+  status       SessionStatus @default(WAITING)
+  finalDraw    Json?         // Persisted draw results as JSONB (Populated when status=COMPLETED)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  players      Player[]
 
   @@index([roomCode])
   @@index([status])

@@ -1257,8 +1257,47 @@ const currentPlayerName = useRef(''); // Set when user enters name
       setRevealedIndex(nextIndex);
       setCurrentReveal(revealQueue[nextIndex]);
     } else {
-      if (roomId) {
-        await updateStatus('COMPLETED');
+      // Draw complete - persist the final draw results
+      if (roomId && room.session) {
+        // Build the final draw payload with all player-team assignments
+        // revealQueue has one team per item, so we need to aggregate by player
+        // Note: We store team CODE only - odds are looked up from WORLD_CUP_2026_TEAMS
+        // at display time, since odds change throughout the competition
+        const playerTeams = new Map<string, { code: string; revealedAt: number }[]>();
+        revealQueue.forEach((reveal, idx) => {
+          if (!playerTeams.has(reveal.playerName)) {
+            playerTeams.set(reveal.playerName, []);
+          }
+          playerTeams.get(reveal.playerName)!.push({
+            code: reveal.team.code,
+            revealedAt: idx
+          });
+        });
+        
+        const finalDraw = {
+          seed: room.session.seed,
+          timestamp: new Date().toISOString(),
+          players: Array.from(playerTeams.entries()).map(([playerName, teams]) => ({
+            playerName,
+            teams
+          })),
+          totalPlayers: playerTeams.size,
+          totalTeams: revealQueue.length
+        };
+        
+        try {
+          await fetch(`/api/room/${roomId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              status: 'COMPLETED',
+              finalDraw: finalDraw
+            })
+          });
+          console.log('Final draw persisted');
+        } catch (err) {
+          console.error('Failed to persist final draw:', err);
+        }
       }
       setTimeout(() => setView('results'), 500);
     }

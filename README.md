@@ -50,8 +50,89 @@ This project was created end-to-end by **Hermes Agent** running a local distille
 
 ### Technical Highlights
 - **Deterministic seeded PRNG** — every connected client sees identical reveal order
+- **Fair tiered distribution algorithm** — balanced quality across all players (see below)
 - **Seamless reconnection** — return to a completed room and see final results instantly
-- **48 World Cup 2026 teams** pre-configured with country codes
+- **48 World Cup 2026 teams** pre-configured with country codes and betting odds
+
+---
+
+## 🎲 The Seeded Drawing Algorithm
+
+The sweepstake uses a sophisticated **two-phase tiered distribution algorithm** to ensure every participant gets a fun, balanced mix of teams — no one gets all the favorites or all the underdogs.
+
+### Why Tiered?
+
+A naive random shuffle would often result in unfair distributions:
+- One person gets Brazil, Spain, France, England (all favorites)
+- Another gets Qatar, Saudi Arabia, Panama, Jamaica (all underdogs)
+
+This creates a poor experience — the first person wins everything, the second wins nothing.
+
+### How It Works
+
+#### Step 1: Team Tiering
+
+All 48 teams are sorted by their World Cup winning odds into **4 tiers of 12 teams**:
+
+| Tier | Description | Example Teams |
+|------|-------------|---------------|
+| **Tier 1** | Heavy favorites (shortest odds) | Spain (4/1), France (9/2), England (11/2) |
+| **Tier 2** | Strong contenders | Brazil (8/1), Argentina (17/2), Portugal (10/1) |
+| **Tier 3** | Mid-table / dark horses | Japan (14/1), Morocco (16/1), Ukraine (20/1) |
+| **Tier 4** | Underdogs (longest odds) | Jamaica (100/1), Panama (150/1), Qatar (500/1) |
+
+#### Step 2: Seeded Shuffling
+
+Using a **Mulberry32 PRNG** seeded from the room creation timestamp:
+- Players are shuffled into a random order (prevents first-joiner advantage)
+- Teams within each tier are shuffled randomly
+
+This ensures **deterministic fairness** — the same seed always produces the same result, and all connected clients see identical outcomes.
+
+#### Step 3: Two-Phase Distribution
+
+**Phase 1 — Tier Coverage:** Each player receives exactly **one team from each tier** (4 teams per player).
+
+```
+Player 1: [Tier 1] [Tier 2] [Tier 3] [Tier 4]
+Player 2: [Tier 1] [Tier 2] [Tier 3] [Tier 4]
+Player 3: [Tier 1] [Tier 2] [Tier 3] [Tier 4]
+...
+```
+
+**Phase 2 — Round-Robin Remainder:** The remaining 4 teams per player (20 teams total) are distributed round-robin.
+
+```
+Player 1: +[Tier ?] +[Tier ?] +[Tier ?] +[Tier ?]
+Player 2: +[Tier ?] +[Tier ?] +[Tier ?] +[Tier ?]
+...
+```
+
+### The Result
+
+With 10 players and 48 teams:
+- **Every player gets 4-5 teams** (no one gets 3 or 6)
+- **Every player has at least one team from each tier** (guaranteed tier coverage)
+- **Remaining teams are mixed tiers** (some players get extra favorites, some get extra underdogs — but everyone has a shot)
+
+### Example Output (10 players)
+
+```
+1. Lewis:     🇪🇸 Spain (4/1), 🇧🇷 Brazil (8/1), 🇯🇵 Japan (14/1), 🇯🇲 Jamaica (100/1)...
+2. Sarah:     🇫🇷 France (9/2), 🇦🇷 Argentina (17/2), 🇲🇦 Morocco (16/1), 🇵🇦 Panama (150/1)...
+3. Mike:      🇬🇧 England (11/2), 🇵🇹 Portugal (10/1), 🇺🇦 Ukraine (20/1), 🇶🇦 Qatar (500/1)...
+...
+```
+
+Each player has a realistic path to winning multiple games while maintaining excitement throughout the tournament.
+
+### Fairness Verification
+
+The algorithm passes rigorous fairness tests:
+- ✅ Equal distribution (everyone gets 4-5 teams with 10 players)
+- ✅ Tier coverage (everyone has at least one team per tier)
+- ✅ Deterministic (same seed = same results, every time)
+- ✅ No first-joiner advantage (players shuffled by seed)
 
 ---
 

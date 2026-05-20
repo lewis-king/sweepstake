@@ -125,12 +125,17 @@ export async function PATCH(
   try {
     const { roomId } = await params;
     const body = await request.json();
-    const { status, assignments } = body;
+    const { status, assignments, finalDraw } = body;
 
     const updateData: any = {};
     
     if (status && ["WAITING", "DRAWING", "COMPLETED"].includes(status)) {
       updateData.status = status;
+      
+      // When status changes to COMPLETED, persist the final draw
+      if (status === "COMPLETED" && finalDraw) {
+        updateData.final_draw = finalDraw;
+      }
     }
 
     if (assignments && Array.isArray(assignments)) {
