@@ -1167,7 +1167,7 @@ const currentPlayerName = useRef(''); // Set when user enters name
 
   // Watch for session status changes - if COMPLETED, show results
   useEffect(() => {
-    if (room.session?.status === 'COMPLETED' && view !== 'results') {
+    if (room.session?.status === 'DRAW_COMPLETED' && view !== 'results') {
       setView('results');
     }
   }, [room.session?.status, view]);
@@ -1210,7 +1210,7 @@ const currentPlayerName = useRef(''); // Set when user enters name
       
       setRoomId(result.sessionId);
       // Set view based on session status
-      if (result.status === 'COMPLETED') {
+      if (result.status === 'DRAW_COMPLETED') {
         setView('results');
       } else {
         setView('lobby');
@@ -1290,7 +1290,7 @@ const currentPlayerName = useRef(''); // Set when user enters name
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              status: 'COMPLETED',
+              status: 'DRAW_COMPLETED',
               finalDraw: finalDraw
             })
           });

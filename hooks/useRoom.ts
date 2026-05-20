@@ -14,7 +14,7 @@ export interface Session {
   hostId: string;
   targetPlayers: number;
   seed: number;
-  status: 'WAITING' | 'DRAWING' | 'COMPLETED';
+  status: 'WAITING' | 'DRAWING' | 'DRAW_COMPLETED';
   players: Player[];
   createdAt: string;
 }
@@ -223,7 +223,7 @@ export function useRoomByCode(roomCode: string) {
 export function useUpdateRoomStatus(roomId: string) {
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const updateStatus = useCallback(async (status: 'DRAWING' | 'COMPLETED') => {
+  const updateStatus = useCallback(async (status: 'DRAWING' | 'DRAW_COMPLETED') => {
     setIsUpdating(true);
     try {
       const res = await fetch(`/api/room/${roomId}`, {

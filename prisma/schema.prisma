@@ -10,7 +10,7 @@ datasource db {
 enum SessionStatus {
   WAITING
   DRAWING
-  COMPLETED
+  DRAW_DRAW_COMPLETED
 }
 
 model Session {
@@ -20,7 +20,7 @@ model Session {
   targetPlayers Int?
   seed         Float
   status       SessionStatus @default(WAITING)
-  finalDraw    Json?         // Persisted draw results as JSONB (Populated when status=COMPLETED)
+  finalDraw    Json?         // Persisted draw results as JSONB (Populated when status=DRAW_DRAW_COMPLETED)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   players      Player[]

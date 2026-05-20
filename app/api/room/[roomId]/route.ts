@@ -129,11 +129,11 @@ export async function PATCH(
 
     const updateData: any = {};
     
-    if (status && ["WAITING", "DRAWING", "COMPLETED"].includes(status)) {
+    if (status && ["WAITING", "DRAWING", "DRAW_COMPLETED"].includes(status)) {
       updateData.status = status;
       
-      // When status changes to COMPLETED, persist the final draw
-      if (status === "COMPLETED" && finalDraw) {
+      // When status changes to DRAW_COMPLETED, persist the final draw
+      if (status === "DRAW_COMPLETED" && finalDraw) {
         updateData.final_draw = finalDraw;
       }
     }
