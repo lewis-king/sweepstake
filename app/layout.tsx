@@ -16,7 +16,11 @@ export const metadata: Metadata = {
   title: "World Cup 2026 Sweepstake",
   description: "Premium sweepstake app for World Cup 2026",
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
     apple: '/apple-touch-icon.png',
   },
 };
