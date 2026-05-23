@@ -74,6 +74,7 @@ export async function POST(
     }
 
     // New player - check if room is still accepting players
+    // Block new players when draw has started (status is DRAWING or DRAW_COMPLETED)
     if (session.status !== "WAITING") {
       return NextResponse.json(
         { error: "Room is no longer accepting players" },

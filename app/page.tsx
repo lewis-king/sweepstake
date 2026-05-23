@@ -921,7 +921,7 @@ function WelcomeScreen({ onCreateRoom, onJoinRoom, isCreating, isJoining, error 
           <div className="mb-4 md:mb-5 px-2">
             <input
               type="text"
-              placeholder="NAME"
+              placeholder="YOUR NAME"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               maxLength={24}
@@ -1212,6 +1212,9 @@ const currentPlayerName = useRef(''); // Set when user enters name
       // Set view based on session status
       if (result.status === 'DRAW_COMPLETED') {
         setView('results');
+      } else if (result.status === 'DRAWING') {
+        // Rejoining during draw - host goes to revealing, others watch
+        setView('revealing');
       } else {
         setView('lobby');
       }
