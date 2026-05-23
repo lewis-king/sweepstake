@@ -119,13 +119,15 @@ export function useJoinRoomByCode() {
 
       const data = await response.json();
       
-      // Fetch session data to get status
+      // Fetch session data to get status and players
       const sessionRes = await fetch(`/api/room/${data.session_id}`);
       const sessionData = await sessionRes.json();
       
       return { 
         sessionId: data.session_id,
-        status: sessionData.status 
+        status: sessionData.status,
+        seed: sessionData.seed,
+        players: sessionData.players || []
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to join room';
