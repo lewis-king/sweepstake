@@ -1213,7 +1213,16 @@ const currentPlayerName = useRef(''); // Set when user enters name
       if (result.status === 'DRAW_COMPLETED') {
         setView('results');
       } else if (result.status === 'DRAWING') {
-        // Rejoining during draw - host goes to revealing, others watch
+        // Rejoining during draw - regenerate reveal state for host
+        const playerNames = result.players.map((p: any) => p.name);
+        const queue = generateRevealQueue(result.seed, playerNames);
+        
+        // Calculate current position based on already-assigned teams
+        const assignedCount = result.players.filter((p: any) => p.assigned_team).length;
+        
+        setRevealQueue(queue);
+        setRevealedIndex(assignedCount);
+        setCurrentReveal(queue[assignedCount] || null);
         setView('revealing');
       } else {
         setView('lobby');
